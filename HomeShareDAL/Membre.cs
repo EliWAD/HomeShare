@@ -14,7 +14,7 @@ namespace HomeShareDAL
         private string _Nom;
         private string _Prenom;
         private string _Email;
-        private int _Pays;
+        private int _idPays;
         private string _Telephone;
         private string _Login;
         private string _Password;
@@ -60,10 +60,10 @@ namespace HomeShareDAL
         /// <summary>
         /// Identifiant du Pays du Membre
         /// </summary>
-        public int Pays
+        public int idPays
             {
-            get { return _Pays; }
-            set { _Pays = value;}
+            get { return _idPays; }
+            set { _idPays = value;}
         }
 
         /// <summary>
@@ -102,7 +102,7 @@ namespace HomeShareDAL
             this.Nom = _Nom;
             this.Prenom = _Prenom;
             this.Email = _Email;
-            this.Pays = _Pays;
+            this.idPays = _idPays;
             this.Telephone = _Telephone;
             this.Login = _Login;
             this.Password = _Password;
@@ -121,7 +121,7 @@ namespace HomeShareDAL
                 memb.Nom = item["Nom"].ToString();
                 memb.Prenom = item["Prenom"].ToString();
                 memb.Email = item["Email"].ToString();
-                memb.Pays = (int)item["Pays"];
+                memb.idPays = (int)item["Pays"];
                 memb.Telephone = item["Telephone"].ToString();
                 memb.Login = item["Login"].ToString();
                 memb.Password = item["Password"].ToString();
@@ -142,7 +142,7 @@ namespace HomeShareDAL
                 me.Nom = item["Nom"].ToString();
                 me.Prenom = item["Prenom"].ToString();
                 me.Email = item["Email"].ToString();
-                me.Pays = (int)item["Pays"];
+                me.idPays = (int)item["Pays"];
                 me.Telephone = item["Telephone"].ToString();
                 me.Login = item["Login"].ToString();
                 me.Password = item["Password"].ToString();
@@ -182,7 +182,7 @@ namespace HomeShareDAL
             dicoValues.Add("Nom", Nom);
             dicoValues.Add("Prenom", Prenom);
             dicoValues.Add("Email", Email);
-            dicoValues.Add("Pays", Pays);
+            dicoValues.Add("Pays", idPays);
             dicoValues.Add("Telephone", Telephone);
             dicoValues.Add("Login", Login);
             dicoValues.Add("Password", Password);

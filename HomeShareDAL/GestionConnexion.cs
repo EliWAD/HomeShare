@@ -42,7 +42,7 @@ namespace DAL
         #region Fields
         private SqlConnection _oConn;
         private SqlCommand _oCom;
-        private string _cnstr = AdopteUneDev.DAL.Properties.Settings.Default.ConnectionString;
+        private string _cnstr = HomeShareDAL.Properties.Settings.Default.ConnectionString;
         #endregion
 
 

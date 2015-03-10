@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DAL;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -46,6 +47,42 @@ namespace HomeShareDAL
         #endregion
 
         #region Statics
+        public static Pays getInfoPays(int idPays)
+        {
+            List<Dictionary<string, object>> unPays = GestionConnexion.Instance.getData("SELECT * FROM Pays WHERE idPays = " + idPays);
+
+            Pays pays = new Pays();
+
+            foreach(Dictionary<string,object> item in unPays)
+            {
+                pays.IdPays = idPays;
+                pays.Libelle = item["Libelle"].ToString();
+            }
+
+            return pays;
+        }
+
+        public static List<Pays> getInfosPays()
+        {
+            List<Dictionary<string, object>> tousLesPays = GestionConnexion.Instance.getData("SELECT * FROM Pays");
+
+            List<Pays> listePays = new List<Pays>();
+
+            foreach (Dictionary<string, object> item in tousLesPays)
+            {
+                Pays pays = new Pays()
+                {
+                    IdPays = (int)item["idPays"],
+                    Libelle = item["Libelle"].ToString()
+
+                };
+
+                listePays.Add(pays);
+            }
+
+            return listePays;
+        }
+
         #endregion
 
         #region Functions

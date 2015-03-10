@@ -18,7 +18,7 @@ namespace HomeShareDAL
         private string _DescCourte;
         private string _DescLong;
         private int _NombrePerson;
-        private int _Pays;
+        private int _idPays;
         private string _Ville;
         private string _Numero;
         private string _CodePostal;
@@ -30,6 +30,8 @@ namespace HomeShareDAL
         private string _Longitude;
         private int _idMembre;
         private DateTime _DateCreation;
+        private Pays _pays;
+        private Membre _membre;
         #endregion
 
         #region Properties
@@ -82,10 +84,10 @@ namespace HomeShareDAL
         /// <summary>
         /// identifiant du Pays dans lequel se trouve le Bien
         /// </summary>
-        public int Pays
+        public int idPays
         {
-            get { return _Pays;  }
-            set { _Pays = value; }
+            get { return _idPays;  }
+            set { _idPays = value; }
         }
 
         /// <summary>
@@ -187,6 +189,22 @@ namespace HomeShareDAL
             get { return  _DateCreation;  }
             set { _DateCreation = value; }
         }
+
+        /// <summary>
+        /// Objet Pays permettant d'accéder à la class Pays
+        /// </summary>
+        public Pays pays
+        {
+            get{ return _pays = _pays ?? Pays.getInfoPays(this.idPays);}
+        }
+
+        /// <summary>
+        /// Navigation Properties permettant de récupérer les Membre du BienEchange courant
+        /// </summary>
+        public Membre membre
+        {
+            get{ return _membre = _membre ?? Membre.getInfoMembre(this.idMembre); }
+        }
         #endregion
 
         #region Constructors
@@ -221,7 +239,7 @@ namespace HomeShareDAL
             this.DescCourte = _DescCourte;
             this.DescLong =  _DescLong;
             this.NombrePerson = _NombrePerson;
-            this.Pays =  _Pays;
+            this.idPays =  _idPays;
             this.Ville = _Ville;
             this.Numero = _Numero;
             this.CodePostal = _CodePostal;
@@ -254,7 +272,7 @@ namespace HomeShareDAL
                 bien.DescCourte = item["DescCourte"].ToString();
                 bien.DescLong = item["DescLong"].ToString();
                 bien.NombrePerson = (int)item["NombrePerson"];
-                bien.Pays = (int)item["Pays"];
+                bien.idPays = (int)item["Pays"];
                 bien.Ville = item["Ville"].ToString();
                 bien.Numero = item["Numero"].ToString();
                 bien.CodePostal = item["CodePostal"].ToString();
@@ -289,7 +307,7 @@ namespace HomeShareDAL
                 bien.DescCourte = item["DescCourte"].ToString();
                 bien.DescLong = item["DescLong"].ToString();
                 bien.NombrePerson = (int)item["NombrePerson"];
-                bien.Pays = (int)item["Pays"];
+                bien.idPays = (int)item["Pays"];
                 bien.Ville = item["Ville"].ToString();
                 bien.Numero = item["Numero"].ToString();
                 bien.CodePostal = item["CodePostal"].ToString();
@@ -306,6 +324,88 @@ namespace HomeShareDAL
             }
 
             return listebiens; 
+        }
+
+        /// <summary>
+        /// Récupération de la liste des BienEchange en fonction du Pays
+        /// </summary>
+        /// <param name="idPays">Identifiant du Pays</param>
+        /// <returns>une List<BienEchange></returns>
+        public List<BienEchange> getBienByPays(int idPays)
+        {
+            List<BienEchange> listeBiens = new List<BienEchange>();
+
+            List<Dictionary<string, object>> lesBiens = GestionConnexion.Instance.getData("SELECT * FROM BienEchange WHERE idPays = " + idPays);
+            
+            foreach(Dictionary<string,object> item in lesBiens)
+            {
+                BienEchange leBien = new BienEchange()
+                {
+                    IdBien = (int)item["idBien"],
+                    titre = item["titre"].ToString(),
+                    DescCourte = item["DescCourte"].ToString(),
+                    DescLong = item["DescLong"].ToString(),
+                    NombrePerson = (int)item["NombrePerson"],
+                    idPays = idPays,
+                    Ville = item["Ville"].ToString(),
+                    Numero = item["Numero"].ToString(),
+                    CodePostal = item["CodePostal"].ToString(),
+                    Photo = item["Photo"].ToString(),
+                    AssuranceObligatoire = (bool)item["AssuranceObligatoire"],
+                    isEnabled = (bool)item["isEnabled"],
+                    DisableDate = DateTime.Parse(item["DisableDate"].ToString()),
+                    Latitude = item["Latitude"].ToString(),
+                    Longitude = item["Longitude"].ToString(),
+                    idMembre = (int)item["idMembre"],
+                    DateCreation = (DateTime)item["DateCreation"]
+                };
+
+                listeBiens.Add(leBien);
+
+            }
+
+            return listeBiens;
+        }
+
+        /// <summary>
+        /// Récupération de la liste des BienEchange en fonction de leur Capacité d'accueil
+        /// </summary>
+        /// <param name="leNbrPerson">Capacité</param>
+        /// <returns>une List<BienEchange></returns>
+        public List<BienEchange> getBienbyCapacite(int leNbrPerson)
+        {
+            List<BienEchange> listeBiens = new List<BienEchange>();
+
+            List<Dictionary<string, object>> lesBiens = GestionConnexion.Instance.getData("SELECT * FROM BienEchange WHERE NombrePerson = " + leNbrPerson);
+
+            foreach (Dictionary<string, object> item in lesBiens)
+            {
+                BienEchange leBien = new BienEchange()
+                {
+                    IdBien = (int)item["idBien"],
+                    titre = item["titre"].ToString(),
+                    DescCourte = item["DescCourte"].ToString(),
+                    DescLong = item["DescLong"].ToString(),
+                    NombrePerson = leNbrPerson,
+                    idPays = (int)item["idPays"],
+                    Ville = item["Ville"].ToString(),
+                    Numero = item["Numero"].ToString(),
+                    CodePostal = item["CodePostal"].ToString(),
+                    Photo = item["Photo"].ToString(),
+                    AssuranceObligatoire = (bool)item["AssuranceObligatoire"],
+                    isEnabled = (bool)item["isEnabled"],
+                    DisableDate = DateTime.Parse(item["DisableDate"].ToString()),
+                    Latitude = item["Latitude"].ToString(),
+                    Longitude = item["Longitude"].ToString(),
+                    idMembre = (int)item["idMembre"],
+                    DateCreation = (DateTime)item["DateCreation"]
+                };
+
+                listeBiens.Add(leBien);
+
+            }
+
+            return listeBiens;
         }
 
         #endregion
@@ -342,7 +442,7 @@ namespace HomeShareDAL
             dicoValues.Add("DescCourte", this.DescCourte);
             dicoValues.Add("DescLong", this.DescLong);
             dicoValues.Add("NombrePerson", this.NombrePerson);
-            dicoValues.Add("Pays", this.Pays);
+            dicoValues.Add("Pays", this.idPays);
             dicoValues.Add("Ville", this.Ville);
             dicoValues.Add("Numero", this.Numero);
             dicoValues.Add("CodePostal", this.CodePostal);
@@ -397,7 +497,7 @@ namespace HomeShareDAL
             dicoValues.Add("DescCourte", this.DescCourte);
             dicoValues.Add("DescLong", this.DescLong);
             dicoValues.Add("NombrePerson", this.NombrePerson);
-            dicoValues.Add("Pays", this.Pays);
+            dicoValues.Add("Pays", this.idPays);
             dicoValues.Add("Ville", this.Ville);
             dicoValues.Add("Numero", this.Numero);
             dicoValues.Add("CodePostal", this.CodePostal);
@@ -429,6 +529,34 @@ namespace HomeShareDAL
             Dictionary<string, object> dicoValues = new Dictionary<string, object>();
             dicoValues.Add("idBien", idBien);
             GestionConnexion.Instance.saveData(query, GenerateKey.APP, dicoValues);
+        }
+
+        #endregion
+
+        #region Private
+        private List<Membre> chargerLesMembres()
+        {
+            string query = @"SELECT memb.* FROM Membre memb WHERE idMembre =" + this.idMembre;
+
+            List<Dictionary<string, object>> mesMembres = GestionConnexion.Instance.getData(query);
+            List<Membre> listeMembres = new List<Membre>();
+
+            foreach (Dictionary<string,object>item in mesMembres)
+            {
+                Membre memb = new Membre();
+                memb.idMembre = (int)item["idMembre"];
+                memb.Nom = item["Nom"].ToString();
+                memb.Prenom = item["Prenom"].ToString();
+                memb.Email = item["Email"].ToString();
+                memb.idPays = (int)item["idPays"];
+                memb.Telephone = item["Telephone"].ToString();
+                memb.Login = item["Login"].ToString();
+                memb.Password = item["Password"].ToString();
+
+                listeMembres.Add(memb);
+            }
+
+            return listeMembres;
         }
         #endregion
     }

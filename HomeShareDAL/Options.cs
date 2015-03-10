@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DAL;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -34,9 +35,35 @@ namespace HomeShareDAL
         #endregion
 
         #region Constructors
+        public Options() { }
+        public Options(int idOption, string libelle)
+        {
+            this.IdOption = idOption;
+            this.Libelle = libelle;
+        }
         #endregion
 
         #region Statics
+        public static List<Options> chargerLesOptions()
+        {
+            List<Dictionary<string, object>> infosOptions = GestionConnexion.Instance.getData("SELECT * FROM Options");
+            
+            List<Options> listeOptions = new List<Options>();
+
+            foreach(Dictionary<string,object> item in infosOptions)
+            {
+                Options opt =new Options()
+                {
+                    IdOption = (int)item["idOption"],
+                    Libelle = item["Libelle"].ToString()
+                };
+
+                listeOptions.Add(opt);
+
+            }
+
+            return listeOptions;
+        }
         #endregion
 
         #region Functions
